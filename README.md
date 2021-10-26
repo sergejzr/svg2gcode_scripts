@@ -40,3 +40,4 @@ If I have some time, I will make it 100% python or java.
 
 Known issues:
 The software has some times some issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
+Example simulator: https://ncviewer.com/
