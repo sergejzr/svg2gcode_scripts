@@ -7,9 +7,9 @@ Input:
 
 Output:
   For each page-layer a GCODE fiel is generated where all procedure layers are merged into one. Thus a page can be carried out at once.
-  
+<img src="toy.svg"/>
 Explanation:
-For my CNC project, I often want to have all parts and peeces to be in a single SVG file, where I can adjust and adapt the drawing without loosing the overview. However each part and peece can require own material and cutting/engraving parameters. For example I would like first to engrave parts and cut them after, but leaving small supports such that the parts do not fall off. This script package should do exactly this!
+For my CNC project, I work with inkscape  and often want to have all parts and peeces to be in a single SVG file, where I can adjust and adapt the drawing without loosing the overview. However each part and peece can require own material and cutting/engraving parameters. For example I would like first to engrave parts and cut them after, but leaving small supports such that the parts do not fall off. This script package should do exactly this!
 
 Example call (to put all gcode into the folder "toyresult"):
 
