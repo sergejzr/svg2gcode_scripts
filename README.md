@@ -3,6 +3,15 @@ Scripts for manipulating / batchprocessing of SVG files into "multi-layered", "m
 
 Input:
   (1)A multilayered SVG file. Each root layers name correspond to a material (For example Wood/Sturofoam/Glas etc.) as defined by user. Each material-layer can contain multiple page-layers. Each page layer can contains multiple procedure layers (example: Cut/Engrave/Write etc.) as defined by user.
+ 
+ input.svg
+   |-Material - Layer (Wood/Sturofoam/etc.)
+   |    |-PageNr - Layer
+   |        |-Procedure -Layer (Cut/Engrave/etc.)
+   |            object1
+   |            objectn
+   |-Material2 ... 
+            
   (2) A set of rules of how to parametrize a particular material-procedure combination. Parameters include feed, laser strength, passes, whether support should be added to cutting peeces, etc.
 
 Output:
@@ -25,3 +34,9 @@ python main.py --file toy.svg --tempfolder tmp --outputfolder toyresult \
 --layersettings material:"Glas" procedure:Engrave speed:300 strength:950  \
 --skipprocedure Meta --skipmaterial Frames
 
+Installation:
+You will just need python with numpy and the svg2code https://github.com/holgafreak/svg2gcode/ (credits to holgafreak).
+If I have some time, I will make it 100% python or java.
+
+Known issues:
+The software has some times some issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
