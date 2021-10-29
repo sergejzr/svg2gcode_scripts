@@ -1,6 +1,5 @@
 #!/usr/bin/python
-from svg_to_gcode.svg_parser import parse_file
-from svg_to_gcode.compiler import Compiler, interfaces
+
 import os
 import re
 import sys
@@ -19,50 +18,11 @@ from subprocess import check_output as qx
 import math
 import numpy as np
 
-
-
-class translateCoo:
-
-    def __init__(self, shiftX,shiftY):
-        self.shift={"X":shiftX,"Y":shiftY}
-    def __call__(self, mymatch):
-        return mymatch.group(2)+str(round((float(mymatch.group(3)) + self.shift[mymatch.group(2)])*100)/100.)
-
-
-
-class SVG2GCodeConverterPython:
-
-    def __call__(self, arguments):
-        # Press the green button in the gutter to run the script.
-        gcode_compiler = Compiler(interfaces.Gcode, arguments["speed"], arguments["strength"], pass_depth=1)
-
-        curves = parse_file(arguments["filename"])  # Parse an svg file into geometric curves
-
-        gcode_compiler.append_curves(curves)
-        gcode_compiler.compile_to_file(arguments["tmpfilegcode"], passes=1)
-        data=""
-        with open(arguments["tmpfilegcode"]) as fp:
-            data = fp.read()
-            fp.close()
-            data=self.translate(data,arguments)
-            with open(arguments["tmpfilegcode"], 'w') as fp:
-                fp.write(data)
-                fp.close()
-
-    def translate(self,data,args):
-        translateC=translateCoo(args["shift"]["x"],args["shift"]["y"])
-
-        data = re.sub('(([X|Y])(\d+(\.+\d*)))',translateC,data)
-        return data
-
+# Press the green button in the gutter to run the script.
 
 class SVG2GCodeConverter:
-
-    def __call__(self, arguments):
-
-        print(arguments)
-        output = qx(arguments)
-
+    def __call__(self, input_svg_file,offsetX,offsetY):
+        a=1+2
 
 class CutRepeater:
     def __init__(self, passes, support=False):
@@ -72,9 +32,9 @@ class CutRepeater:
     def __call__(self, value):
 
         if self.support:
-            return self.addsupport(value, self.support,self.passes)
+            return self.addears(value, self.support,self.passes)
         else:
-            return self.addsupport(value, False, self.passes)
+            return self.addears(value, False, self.passes)
 
     def lineinfo(self,p1, p2):
         gap = 2
@@ -120,7 +80,7 @@ class CutRepeater:
                 maxlen["lenauslen"] = i - 1
         return maxlen
 
-    def addsupport(self,match, support,  passes):
+    def addears(self,match, support,  passes):
 
         block = match.group(1)
 
@@ -240,33 +200,35 @@ class Svg2GcodeMerger:
         lst = float(int(float(match.group(2)) * 100)) / 100.
 
         return match.group(1) + str(lst)
+
     def svg2cleangc(self, newline, speed, strength, codestyle, repeat, addsuport=False):
 
-        #newline = re.sub("G1\s(.*)\nG1\s(.*)\nG0\s(.*)\n\(\scity", 'G1 \g<1>\nG1 \g<2>\nS0\nG0 \g<3>\n( city', newline,
-        #                 flags=re.MULTILINE)
+        newline = re.sub("G1\s(.*)\nG1\s(.*)\nG0\s(.*)\n\(\scity", 'G1 \g<1>\nG1 \g<2>\nS0\nG0 \g<3>\n( city', newline,
+                         flags=re.MULTILINE)
 
-       # newline = re.sub('\( end \)', 'S0', newline, flags=re.MULTILINE)
-        #newline = re.sub('\( city \d* \)', 'S' + str(strength), newline, flags=re.MULTILINE)
+        newline = re.sub('\( end \)', 'S0', newline, flags=re.MULTILINE)
+        newline = re.sub('\( city \d* \)', 'S' + str(strength), newline, flags=re.MULTILINE)
 
         if codestyle != "laserGRBL":
             return newline
-        newline=newline+"\n" #for regex match
+
         # G\d+.*\n)(G0.*\n)
         #        newline = re.sub("^G1(.*)\nG1\\1\n", 'G1\\1\n', newline,
         #                         flags=re.MULTILINE)
         #
-        newline = re.sub('^M5;\nG1', 'S0\nG0', newline,
+
+        newline = re.sub("(G\\d+.*\n)(G0.*\n)", '\\1\nS0\n\\2', newline,
                          flags=re.MULTILINE)
 
-        newline = re.sub('^G0.*(X.*)(Y.*);', 'G0 \\1\\2;', newline,
+        newline = re.sub("^(.*)\nS0\n\\1\n", '\\1\nS0\n', newline,
                          flags=re.MULTILINE)
 
-        newline = re.sub('^(M3.*\nG1(.*)(X.*)(Y.*));\n', 'M3 S'+str(strength)+';\nG1 \\3\\4 F'+str(speed)+';\n', newline,
-                         flags=re.MULTILINE)
-        newline = re.sub('^M5;\n', 'M5 S0;\n', newline,
-                         flags=re.MULTILINE)
+        newline = re.sub('\nG0 M3 S90\n', '\nG0 M3 S0\n', newline, flags=re.MULTILINE)
+        #   newline = re.sub('G1\\s*(X\\d+\.*\\d*)\\s*(Y\\d+\.*\\d*)\\s*(F\\d+)\nG1 \\1\\s*(Y\\d+\.*\\d*)\\s*(F\\d+)',
+        #                    'G1 \\1 \\2 \\3\n\\4', newline, flags=re.MULTILINE)
 
-
+        newline = re.sub('G1\\s*(X\\d+\.*\\d*)\\s*(Y\\d+\.*\\d*)\\s*(F\\d+)\nM5', 'G1 \\1 \\2 \\3\nS0\nM5', newline,
+                         flags=re.MULTILINE)
 
         newline = re.sub('([X|Y])(\\d+\.*\\d*)', self.roundme, newline, flags=re.MULTILINE)
         newline = re.sub('(G92.*)\n', "", newline, flags=re.MULTILINE)
@@ -353,14 +315,14 @@ class Svg2GcodeMerger:
                     res = ""
                 res = res + cleanedline
 
-       # res = re.sub('\nS0\nM5\nG0', "\nS0 M5 S0\nG0 X0 Y0", res, flags=re.MULTILINE)
+        res = re.sub('\nS0\nM5\nG0', "\nS0 M5 S0\nG0 X0 Y0", res, flags=re.MULTILINE)
 
         support=False
         if addsuport:
             support={"gap":addsuport["support_gap"],"laseron":strength,"laseroff":addsuport["support_strength"]}
 
         rptr = CutRepeater(repeat, support)
-        res = re.sub('(^G0.*\n(.*\n)+S0)', rptr, res, flags=re.MULTILINE)
+        res = re.sub('^((G0.*)\nS([1-9]+\\d*)(((.*)\n)+?S0))', rptr, res, flags=re.MULTILINE)
 
         # if repeat>1:
         #    rounds=repeat
@@ -375,6 +337,36 @@ class Svg2GcodeMerger:
 
         # res = re.sub('^((G0.*)\nS([1-9]+\\d*)(((.*)\n)+?S0))', replacement, res, flags=re.MULTILINE)
         return res
+
+    def extremes(self, inputfiles):
+        x = 1000000
+        y = 1000000
+        h = -1000000
+        yaxix = - 1000000
+        for info in inputfiles:
+            if info["dim"]["y"] < y:
+                y = info["dim"]["y"]
+            if info["dim"]["x"] < x:
+                x = info["dim"]["x"]
+            if (info["dim"]["h"]) > h:
+                h = info["dim"]["h"]
+            if yaxix < info["dim"]["y"] + info["dim"]["h"]:
+                yaxix = info["dim"]["y"] + info["dim"]["h"]
+        return x, y, h, yaxix
+
+    def queryInkskape(self, filename):
+        # Find out the dimensons of the drawing, so we can calculate input and shift for svg2gcode
+        output = qx(['inkscape', "--query-x", "--query-y", "--query-width", "--query-height", filename])
+
+        output = str(output)
+        output = output.split("\\n")
+
+        prog = re.compile("(\d+\.*\d*)")
+        pixelfactor = 96 / 25.4
+        return {"x": float(prog.search(output[0]).group(1)) / pixelfactor,
+                "y": float(prog.search(output[1]).group(1)) / pixelfactor,
+                "w": float(prog.search(output[2]).group(1)) / pixelfactor,
+                "h": float(prog.search(output[3]).group(1)) / pixelfactor}
 
     def process(self, outputfilename, inputfiles, s2g={}, padding={"x": 5, "y": 5}, autoshiftY=False, codestyle=None,
                 tmpdir="tmpwork"):
@@ -391,13 +383,45 @@ class Svg2GcodeMerger:
         paddingy = int(padding["y"])
 
         for info in inputfiles:
+            result = hashlib.md5(info["filename"].encode('utf-8'))
+
+            info["tmpfile"] = os.path.join(tmpdir, str(result.hexdigest()) + os.path.basename(
+                info["filename"]) + "_cropped.svg")
+            output = qx(
+                ['inkscape', "--export-text-to-path", "--export-area-drawing", info["filename"], "-o",
+
+                 info["tmpfile"]
+
+                 ])
+            res = self.queryInkskape(info["filename"])
+            info["dim"] = res
             info["shift"] = {"x": 0, "y": 0}
 
-        print(info)
+        minx, miny, maxh, yaxix = self.extremes(inputfiles)
+
+        # for info in inputfiles:
+
+        #    info["shift"]["y"]=info["dim"]["y"]-miny+info["dim"]["h"]-(info["dim"]["y"]-miny)
+        #    info["shift"]["x"] = info["dim"]["x"] - minx
+
+        for info in inputfiles:
+            info["shift"]["y"] = (info["dim"]["y"] - miny)
+            info["shift"]["x"] = info["dim"]["x"] - minx
+
+            print(info)
+        print("yaxix:" + str(yaxix))
+
+        print("y:" + str(miny))
+
+        if autoshiftY:
+            for info in inputfiles:
+                info["shift"]["y"] = info["shift"]["y"] - 2 * (info["dim"]["y"] - miny) + (yaxix - miny)
 
         for info in inputfiles:
             info["shift"]["y"] = info["shift"]["y"] + paddingy
             info["shift"]["x"] = info["shift"]["x"] + paddingx
+
+        # yshift=maxh-miny
 
         completedata = ""
 
@@ -416,30 +440,27 @@ class Svg2GcodeMerger:
                 else:
                     s2gkeys[akey] = ""
 
-            arguments = []
+            arguments = ['/home/szerr/git/svg2gcode/svg2gcode']
 
             for akey in s2gkeys:
                 arguments.append("-" + akey)
                 if s2g[akey] and s2g[akey] != "":
                     arguments.append(s2g[akey])
 
-
+            arguments.append('-w ' + str(info["dim"]["w"]))
             arguments.append('-Y ' + str(info["shift"]["y"]))
             arguments.append('-X ' + str(info["shift"]["x"]))
             arguments.append('-f ' + str(info["speed"]))
-            arguments.append(info["filename"])
+            arguments.append(info["tmpfile"])
 
             result = hashlib.md5(info["filename"].encode('utf-8'))
 
             info["tmpfilegcode"] = os.path.join(tmpdir,
                                                 result.hexdigest() + os.path.basename(info["filename"]) + ".gcode")
 
-            conv= SVG2GCodeConverterPython()
-            #arguments.append(info["tmpfilegcode"])
-            conv(info)
-
-
-
+            arguments.append(info["tmpfilegcode"])
+            print(arguments)
+            output = qx(arguments)
             #           output = qx(
             #               ['/home/szerr/git/svg2gcode/svg2gcode', '-F', '-B', '-w ' + str(info["dim"]["w"]),
             #                '-Y ' + str(info["shift"]["y"]),
@@ -450,13 +471,7 @@ class Svg2GcodeMerger:
             with open(info["tmpfilegcode"]) as fp:
                 data = fp.read()
                 fp.close()
-            supportstr="no"
-            if info["support"]:
-                supportstr = "yes, "+str(info["support"])+"'"
-            cleandata = "( file start "+info["filename"]+")\n( speed:"+str(info["speed"])+", strength:"+str(info["strength"])+\
-                        " codestyle='"+codestyle+"', passes:"+str(info["repeat"])+" support:"+supportstr+" )\n"+\
-                        self.svg2cleangc(data, info["speed"], info["strength"], codestyle, info["repeat"], info["support"])+\
-                        "( file end "+info["filename"]+")\n"
+            cleandata = self.svg2cleangc(data, info["speed"], info["strength"], codestyle, info["repeat"], info["support"])
             #            if jumpspeed:
             #                cleandata = re.sub('S0\nG(.*)F(\\d+)', 'S0\nG\\1F' + str(jumpspeed), cleandata, flags=re.MULTILINE)
             repeat = info["repeat"]

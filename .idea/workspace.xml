@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger_old.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inksvglib/SvgPageSplitter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_new.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pagesplit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/svg3gcodetest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" beforeDir="false" afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="202j2RpGpgiVaM5PgbxKrktMDdQ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -21,8 +47,20 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/inksvglib" />
+      <recent name="$PROJECT_DIR$/gcodelib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/jupyter" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main_new">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -36,7 +74,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--file toy.svg --tempfolder tmp --outputfolder toyresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:2 support_gap:2 support_strength:500 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:5 strength:950 support_gap:2 support_strength:500 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:2 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
+      <option name="PARAMETERS" value="--file toyAT.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:2 support_gap:2 support_strength:500 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:5 strength:950 support_gap:2 support_strength:500 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:2 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -44,9 +82,104 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main_new" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="svg2gcode_scripts" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_new.py" />
+      <option name="PARAMETERS" value="--file toyAT.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:2 support_gap:10 support_strength:0 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:10 support_strength:0 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:5 strength:950 support_gap:10 support_strength:0 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:2 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pagesplit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="svg2gcode_scripts" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pagesplit.py" />
+      <option name="PARAMETERS" value="-f $PROJECT_DIR$/toyAT.svg -o testout -t tempout" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="svg3gcodetest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="svg2gcode_scripts" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/svg3gcodetest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="svglayersplit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="svg2gcode_scripts" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/svglayersplit.py" />
+      <option name="PARAMETERS" value="-f $PROJECT_DIR$/toyAT.svg" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.svg3gcodetest" />
+      <item itemvalue="Python.svglayersplit" />
+      <item itemvalue="Python.pagesplit" />
+      <item itemvalue="Python.main_new" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.pagesplit" />
+        <item itemvalue="Python.svglayersplit" />
+        <item itemvalue="Python.svg3gcodetest" />
       </list>
     </recent_temporary>
   </component>
@@ -71,5 +204,14 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="'.//{%s}g[@id=&quot;' + material_id + '&quot;]' % SVG_NS" language="Python" />
+        <watch expression="'.//{'+SVG_NS+'}g[@id=&quot;' + material_id + '&quot;]'" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
