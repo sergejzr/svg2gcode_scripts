@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inksvglib/SvgPageSplitter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main_new.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pagesplit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/svg3gcodetest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/old_support.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/support.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" beforeDir="false" afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toy.svg" beforeDir="false" afterPath="$PROJECT_DIR$/toy.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +57,7 @@
       <recent name="$PROJECT_DIR$/jupyter" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main_new">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,7 +71,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--file toyAT.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:2 support_gap:2 support_strength:500 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:5 strength:950 support_gap:2 support_strength:500 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:2 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
+      <option name="PARAMETERS" value="--file toy.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:1 support_gap:1 support_strength:0 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:1 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:1 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -95,7 +92,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_new.py" />
-      <option name="PARAMETERS" value="--file toyAT.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:2 support_gap:10 support_strength:0 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:10 support_strength:0 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:5 strength:950 support_gap:10 support_strength:0 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:2 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
+      <option name="PARAMETERS" value="--file toy.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:1 support_gap:1 support_strength:0 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:1 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:1 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950  --skipprocedure Meta --skipmaterial Frames" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -124,7 +121,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="svg3gcodetest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="support" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -136,8 +133,8 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/svg3gcodetest.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/support.py" />
+      <option name="PARAMETERS" value="-f testin.gcode" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -168,18 +165,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python.svg3gcodetest" />
       <item itemvalue="Python.svglayersplit" />
       <item itemvalue="Python.pagesplit" />
       <item itemvalue="Python.main_new" />
+      <item itemvalue="Python.support" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.support" />
         <item itemvalue="Python.pagesplit" />
         <item itemvalue="Python.svglayersplit" />
-        <item itemvalue="Python.svg3gcodetest" />
       </list>
     </recent_temporary>
   </component>
@@ -207,11 +204,24 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="'.//{%s}g[@id=&quot;' + material_id + '&quot;]' % SVG_NS" language="Python" />
-        <watch expression="'.//{'+SVG_NS+'}g[@id=&quot;' + material_id + '&quot;]'" language="Python" />
-      </configuration>
-    </watches-manager>
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>294</line>
+          <option name="timeStamp" value="105" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>327</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>326</line>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

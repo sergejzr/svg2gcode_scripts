@@ -52,8 +52,14 @@ if __name__ == '__main__':
 
 
     tmpdir = args.tempfolder
-    if not os.path.exists(tmpdir):
-        os.makedirs(tmpdir)
+
+    tmpdircrop=os.path.join(tmpdir,"crop")
+    tmpdirsplit = os.path.join(tmpdir, "split")
+    if not os.path.exists(tmpdircrop):
+        os.makedirs(tmpdircrop)
+
+    if not os.path.exists(tmpdirsplit):
+        os.makedirs(tmpdirsplit)
 
     title=Path(args.file).stem
     outdir = join(args.outputfolder, title)
@@ -74,9 +80,9 @@ if __name__ == '__main__':
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    output = qx(["python","svglayersplit.py", "--file", args.file, "--outputfolder", tmpdir])
+    output = qx(["python","pagesplit.py", "--file", args.file, "--outputfolder", tmpdirsplit,"--tempfolder", tmpdircrop])
 
-    onlyfiles = [f for f in listdir(tmpdir) if isfile(join(tmpdir, f))]
+    onlyfiles = [f for f in listdir(tmpdirsplit) if isfile(join(tmpdirsplit, f))]
     groupfiles = {}
 
     for f in onlyfiles:
@@ -115,7 +121,7 @@ if __name__ == '__main__':
                     print("I skip the material "+meta["material"]+" or procedure "+meta["procedure"]+". Skipped = "+str(skipprocedures))
                     continue
                 arguments.append("--file")
-                arguments.append(join(tmpdir, meta["filename"]))
+                arguments.append(join(tmpdirsplit, meta["filename"]))
 
 
                 searchkey=meta["material"] + "_" + meta["procedure"]

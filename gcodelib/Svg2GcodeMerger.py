@@ -18,7 +18,7 @@ from argparserlib.svgtoolargparser import required_length
 from subprocess import check_output as qx
 import math
 import numpy as np
-
+import copy
 
 
 class translateCoo:
@@ -72,11 +72,11 @@ class CutRepeater:
     def __call__(self, value):
 
         if self.support:
-            return self.addsupport(value, self.support,self.passes)
+            return self.addsupport(value, self.support, self.passes)
         else:
             return self.addsupport(value, False, self.passes)
 
-    def lineinfo(self,p1, p2):
+    def lineinfo(self, p1, p2):
         gap = 2
         length = math.sqrt(math.pow(p1["x"] - p2["x"], 2) + math.pow(p1["y"] - p2["y"], 2))
         if length == 0:
@@ -84,7 +84,7 @@ class CutRepeater:
         proc = gap / length
         return {"len": length, "proc": proc, "p1": p1, "p2": p2}
 
-    def splitinthemiddle(self,point1, point2, gap):
+    def splitinthemiddle(self, point1, point2, gap):
         inverse = np.array([0, 0]) - np.array(point1)
         v = np.array([point1, point2])
         v = v + inverse
@@ -99,7 +99,7 @@ class CutRepeater:
 
         return [n1 - inverse, np.array([n2[1], v[1]]) - inverse]
 
-    def findLongestLine(self,points):
+    def findLongestLine(self, points):
 
         maxlen = False
         prevpoint = False
@@ -120,15 +120,69 @@ class CutRepeater:
                 maxlen["lenauslen"] = i - 1
         return maxlen
 
-    def addsupport(self,match, support,  passes):
+    def findGoodSupport(self, points, gap):
+        lines = []
+        prevpnt = False
+        lenlin = 0
+        i = 0
+        maxlen = False
+        for point in points:
+            i = i + 1
+            if not "x" in point:
+                continue
+
+            if prevpnt:
+                linfo = self.lineinfo(prevpnt, point)
+                lines.append(linfo)
+                lenlin = lenlin + linfo["len"]
+                if not maxlen:
+                    maxlen = linfo
+                if maxlen["len"] < linfo["len"]:
+                    maxlen = linfo
+                    maxlen["lenauslen"] = i - 1
+
+            prevpnt = point
+
+        sortedlines=copy.deepcopy(lines)
+        #lines.sort()
+
+        gaps = {}
+        if lenlin < (gap * 4):
+            return False
+
+        if maxlen["len"] > (gap * 4):
+            # self.splitinthemiddle()
+            w = 3 + 4
+            res = self.splitinthemiddle([maxlen["p1"]["x"], maxlen["p1"]["y"]], [maxlen["p2"]["x"], maxlen["p2"]["y"]],
+                                        gap)
+
+            return {"type": "split", "gap": maxlen}
+
+
+        else:
+            quater = lenlin / 4
+            eight = lenlin / 8
+            g1 = self.readGapAt(eight, gap, lines)
+            # g2=self.readGapAt(5*eight, gap, lines)
+            if g1:
+                print("\nGAp1 startpoint:" + str(g1["p1"]) + "\nendpoint:" + str(g1["p2"]))
+                # return {"type": "conti", "gap": g1}
+                g2 = self.readGapAt(eight * 5, gap, lines)
+                if g2:
+                    print("\nGAp2 startpoint:" + str(g2["p1"]) + "\nendpoint:" + str(g2["p2"]))
+
+                    return {"type": "conti", "gapstart": g1, "gapend": g2}
+
+        return False
+
+    def addsupport(self, match, support, passes):
 
         block = match.group(1)
-
 
         if not support:
             newdata = block
         else:
-            newdata=""
+            newdata = ""
             lines = []
             pattern = re.compile('(.*)(X(\\d+\\.*\\d*))*\\s*(Y(\\d+\\.*\\d*))*\\s*(F\\d+)*')
             pattern_getX = re.compile('X(\d+\.*\d*)')
@@ -169,12 +223,12 @@ class CutRepeater:
                 else:
                     if aX:
                         newX = float(aX.group(1))
-                        oldX=newX
+                        oldX = newX
                     else:
                         newX = oldX
                     if aY:
                         newY = float(aY.group(1))
-                        oldY=newY
+                        oldY = newY
                     else:
                         newY = oldY
                     if not oldX and not oldY:
@@ -185,22 +239,12 @@ class CutRepeater:
                         else:
                             points.append({"linenr": i - 1})
 
-            lline = self.findLongestLine(points)
+            split = self.findGoodSupport(points, support["gap"])
 
-            if lline and lline["len"] < support["gap"]:
-                lline = False
-            if lline:
+            if split and split["type"] == "split":
+                lline = split["gap"]
                 a = np.array([lline["p1"]["x"], lline["p1"]["y"]])
                 b = np.array([lline["p2"]["x"], lline["p2"]["y"]])
-
-                # dist = np.linalg.norm(a-b)
-
-                # mpx=lline["p1"]["x"]
-                # mpy=lline["p1"]["y"]
-
-                # mp2x=lline["p2"]["x"]
-                # mp2y=lline["p2"]["y"]
-
                 supportsplit = self.splitinthemiddle(a, b, support["gap"])
 
                 mpx = supportsplit[0][1][0]
@@ -209,28 +253,81 @@ class CutRepeater:
                 mp2x = supportsplit[1][0][0]
                 mp2y = supportsplit[1][0][1]
 
-            newdata = ""
-            i = 0
-            line = ""
-            for line in originallines:
-                i = i + 1
-                newdata += line + "\n"
-                if lline and (i - 1) == lline["p1"]["linenr"]:
-                    newdata = newdata + "(addedblock start)\n" + "X" + str(mpx) + " Y" + str(mpy) + "\nS" + str(
-                        support["laseroff"]) + "\nX" + str(
-                        mp2x) + " Y" + str(mp2y) + "\nS" + str(support["laseron"]) + "\n(added block end)\n"
+                newdata = ""
+                i = 0
+                line = ""
+                for line in originallines:
+                    i = i + 1
+                    newdata += line + "\n"
+                    if lline and (i - 1) == lline["p1"]["linenr"]:
+                        newdata = newdata + "(addedblock start)\n" + "X" + str(mpx) + " Y" + str(mpy) + "\nS" + str(
+                            support["laseroff"]) + "\nX" + str(
+                            mp2x) + " Y" + str(mp2y) + "\nS" + str(support["laseron"]) + "\n(added block end)\n"
+            elif split and split["type"] == "conti":
 
+                i = 0
+                gapclosed=True
+                for line in originallines:
+                    i = i + 1
 
+                    if (i - 1) == split["gapstart"]["p1"]["linenr"]:
+                        newdata = newdata + "(addedSwitchblock start)\nS" + str(
+                            support["laseroff"]) + ";\n"
+                        newdata += line + "\n"
+                        gapclosed=False
+                    elif (i - 1) == split["gapstart"]["p2"]["linenr"]:
+                        newdata += line + "\n(addedSwitchblock end)\nS" + str(
+                            support["laseron"]) + ";\n"
+                        gapclosed=True
+                    else:
+                        newdata += line + "\n"
+                        #if (i - 1) == split["gapend"]["p1"]["linenr"]:
+                        #    newdata = newdata + "(addedSwitchblock start)\nS" + str(
+                        #        support["laseroff"]) + "\n"
+                        #    newdata += line + "\n"
+                        #elif (i - 1) == split["gapend"]["p2"]["linenr"]:
+                        #    newdata += line + "\n(addedSwitchblock end)\nS" + str(
+                        #        support["laseron"]) + "\n"
+                        #else:
+                        #    newdata += line + "\n"
 
-        passestrart=passes
+                if not gapclosed:
+                    print("WTF?")
+        passestrart = passes
         returndata = ""
-        while passes>0:
-            passes=passes-1
-            returndata=returndata+"\n( start pass "+str(passestrart-passes)+" of "+str(passestrart)+" )\n"+newdata+"( end pass "+str(passestrart-passes)+" of "+str(passestrart)+" )"
+        while passes > 0:
+            passes = passes - 1
+            returndata = returndata + "\n( start pass " + str(passestrart - passes) + " of " + str(
+                passestrart) + " )\n" + newdata + "( end pass " + str(passestrart - passes) + " of " + str(
+                passestrart) + " )"
         return returndata
 
+    def readGapAt(self, eight, gap, lines):
+        gapstart = False
+        clen = 0
+        i = -1
+        startlen = False
+        gapend = False
+        while i < len(lines) - 1:
+            i = i + 1
+            line = lines[i]
+            clen = clen + line["len"]
+            if not startlen and clen >= eight:
+                startlen = 0
+                gapstart = line["p1"]
+            if gapstart:
+                startlen = startlen + line["len"]
 
+            if startlen and startlen >= gap:
+                if (gapstart!=line):
+                    gapend = line["p1"]
+                else:
+                    gapend = line["p2"]
 
+                if gapstart["linenr"]==gapend["linenr"]:
+                    print("A WTF")
+                else:
+                    return {"p1": gapstart, "p2": gapend}
 
 
 
@@ -250,20 +347,20 @@ class Svg2GcodeMerger:
 
         if codestyle != "laserGRBL":
             return newline
-        newline=newline+"\n" #for regex match
+        newline="\n"+newline+"\n" #for regex match
         # G\d+.*\n)(G0.*\n)
         #        newline = re.sub("^G1(.*)\nG1\\1\n", 'G1\\1\n', newline,
         #                         flags=re.MULTILINE)
         #
-        newline = re.sub('^M5;\nG1', 'S0\nG0', newline,
+        newline = re.sub('^M5;\nG1', 'S0;\nG0', newline,
                          flags=re.MULTILINE)
 
         newline = re.sub('^G0.*(X.*)(Y.*);', 'G0 \\1\\2;', newline,
                          flags=re.MULTILINE)
 
-        newline = re.sub('^(M3.*\nG1(.*)(X.*)(Y.*));\n', 'M3 S'+str(strength)+';\nG1 \\3\\4 F'+str(speed)+';\n', newline,
+        newline = re.sub('^(M3.*\nG1(.*)(X.*)(Y.*));\n', 'S'+str(strength)+';\nG1 \\3\\4 F'+str(speed)+';\n', newline,
                          flags=re.MULTILINE)
-        newline = re.sub('^M5;\n', 'M5 S0;\n', newline,
+        newline = re.sub('^M5;\n', 'S0;\n', newline,
                          flags=re.MULTILINE)
 
 
@@ -271,7 +368,7 @@ class Svg2GcodeMerger:
         newline = re.sub('([X|Y])(\\d+\.*\\d*)', self.roundme, newline, flags=re.MULTILINE)
         newline = re.sub('(G92.*)\n', "", newline, flags=re.MULTILINE)
         newline = re.sub('(G90.*)\n', "", newline, flags=re.MULTILINE)
-        newline = re.sub('G0\\s+M3\\s+S0\n', "M3 S0\nS0\n", newline, flags=re.MULTILINE)
+        newline = re.sub('G0\\s+M3\\s+S0\n', "S0;\n", newline, flags=re.MULTILINE)
 
         res = False
         oldX = False
@@ -360,7 +457,9 @@ class Svg2GcodeMerger:
             support={"gap":addsuport["support_gap"],"laseron":strength,"laseroff":addsuport["support_strength"]}
 
         rptr = CutRepeater(repeat, support)
-        res = re.sub('(^G0.*\n(.*\n)+S0)', rptr, res, flags=re.MULTILINE)
+        res = re.sub('(^G0.*\n(.*\n)+?(M5\s+)*S0;)', rptr, res, flags=re.MULTILINE)
+        #res = re.sub('(^G0.*\n(.*\n)+?(M5\s+)*S0;)', "\n(object start)\n\\1\n(object end)\n", res, flags=re.MULTILINE)
+        #"\n(object start)\n\\1\n(object end)\n"
 
         # if repeat>1:
         #    rounds=repeat
@@ -374,7 +473,7 @@ class Svg2GcodeMerger:
         #        replacement=replacement+"\\1"
 
         # res = re.sub('^((G0.*)\nS([1-9]+\\d*)(((.*)\n)+?S0))', replacement, res, flags=re.MULTILINE)
-        return res
+        return "M3 S0;\n"+res+"\nM5 S0;\n"
 
     def process(self, outputfilename, inputfiles, s2g={}, padding={"x": 5, "y": 5}, autoshiftY=False, codestyle=None,
                 tmpdir="tmpwork"):
