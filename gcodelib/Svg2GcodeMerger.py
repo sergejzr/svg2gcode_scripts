@@ -355,7 +355,7 @@ class Svg2GcodeMerger:
         newline = re.sub('^M5;\nG1', 'S0;\nG0', newline,
                          flags=re.MULTILINE)
 
-        newline = re.sub('^G0.*(X.*)(Y.*);', 'G0 \\1\\2;', newline,
+        newline = re.sub('^G0.*(X.*)(Y.*);', '\nG0 \\1\\2;', newline,
                          flags=re.MULTILINE)
 
         newline = re.sub('^(M3.*\nG1(.*)(X.*)(Y.*));\n', 'S'+str(strength)+';\nG1 \\3\\4 F'+str(speed)+';\n', newline,
@@ -368,87 +368,91 @@ class Svg2GcodeMerger:
         newline = re.sub('([X|Y])(\\d+\.*\\d*)', self.roundme, newline, flags=re.MULTILINE)
         newline = re.sub('(G92.*)\n', "", newline, flags=re.MULTILINE)
         newline = re.sub('(G90.*)\n', "", newline, flags=re.MULTILINE)
-        newline = re.sub('G0\\s+M3\\s+S0\n', "S0;\n", newline, flags=re.MULTILINE)
+        #newline = re.sub('G0\\s+M3\\s+S0\n', "S0;\n", newline, flags=re.MULTILINE)
+        res=newline
+        if False:
+            mx = re.compile("^G0.*")
+            res = False
+            oldX = False
+            oldY = False
+            oldF = False
+            oldG = False
+            oldline = False
 
-        res = False
-        oldX = False
-        oldY = False
-        oldF = False
-        oldG = False
-        oldline = False
+            for line in newline.split("\n"):
 
-        for line in newline.split("\n"):
-
-            if oldline and oldline == line:
-                print("doubled")
-            else:
-                oldline = line
-
-                mt = re.match('.*X(\\d+(\.\\d*)*).*', line)
-                if mt:
-                    newX = float(mt.group(1))
+                if oldline and oldline == line:
+                    print("doubled")
                 else:
-                    newX = False
-
-                mt = re.match('.*Y(\\d+(\.\\d*)*).*', line)
-                if mt:
-                    newY = float(mt.group(1))
-                else:
-                    newY = False
-
-                mt = re.match('.*F(\\d+).*', line)
-                if mt:
-                    newF = float(mt.group(1))
-                else:
-                    newF = False
-
-                cleanedline = False
-                mt = re.match('(G(\\d+)).*', line)
-                if mt:
-                    newG = int(mt.group(2))
-
-                    if not oldG or newG != oldG:
-                        cleanedline = "G" + str(newG)
-                        oldF = False
-                    oldG = newG
-                    if newX:
-                        if cleanedline:
-                            cleanedline = cleanedline + " "
+                    oldline = line
+                    if not mx.match(line):
+                        mt = re.match('.*X(\\d+(\.\\d*)*).*', line)
+                        if mt:
+                            newX = float(mt.group(1))
                         else:
-                            cleanedline = ""
+                            newX = False
 
-                        if not oldX or newX != oldX:
-                            cleanedline = cleanedline + "X" + str(newX)
-                        oldX = newX
-
-                    if newY:
-                        if cleanedline:
-                            cleanedline = cleanedline + " "
+                        mt = re.match('.*Y(\\d+(\.\\d*)*).*', line)
+                        if mt:
+                            newY = float(mt.group(1))
                         else:
-                            cleanedline = ""
+                            newY = False
 
-                        if not oldY or newY != oldY:
-                            cleanedline = cleanedline + "Y" + str(newY)
-                        oldY = newY
-
-                    if newF:
-                        if cleanedline:
-                            cleanedline = cleanedline + " "
+                        mt = re.match('.*F(\\d+).*', line)
+                        if mt:
+                            newF = float(mt.group(1))
                         else:
-                            cleanedline = ""
+                            newF = False
 
-                        if not oldF or newF != oldF:
-                            cleanedline = cleanedline + "F" + str(newF)
-                        oldF = newF
-                else:
-                    oldG = False
-                    cleanedline = line
+                        cleanedline = False
+                        mt = re.match('(G(\\d+)).*', line)
+                        if mt:
+                            newG = int(mt.group(2))
 
-                if res:
-                    res = res + "\n"
-                else:
-                    res = ""
-                res = res + cleanedline
+                            if not oldG or newG != oldG:
+                                cleanedline = "G" + str(newG)
+                                oldF = False
+                            oldG = newG
+                            if newX:
+                                if cleanedline:
+                                    cleanedline = cleanedline + " "
+                                else:
+                                    cleanedline = ""
+
+                                if not oldX or newX != oldX:
+                                    cleanedline = cleanedline + "X" + str(newX)
+                                oldX = newX
+
+                            if newY:
+                                if cleanedline:
+                                    cleanedline = cleanedline + " "
+                                else:
+                                    cleanedline = ""
+
+                                if not oldY or newY != oldY:
+                                    cleanedline = cleanedline + "Y" + str(newY)
+                                oldY = newY
+
+                            if newF:
+                                if cleanedline:
+                                    cleanedline = cleanedline + " "
+                                else:
+                                    cleanedline = ""
+
+                                if not oldF or newF != oldF:
+                                    cleanedline = cleanedline + "F" + str(newF)
+                                oldF = newF
+                        else:
+                            oldG = False
+                            cleanedline = line
+
+                        if res:
+                            res = res + "\n"
+                        else:
+                            res = ""
+                    else:
+                        cleanedline = line
+                    res = res + cleanedline
 
        # res = re.sub('\nS0\nM5\nG0', "\nS0 M5 S0\nG0 X0 Y0", res, flags=re.MULTILINE)
 
@@ -605,11 +609,10 @@ class Svg2GcodeMerger:
         parser.add_argument('-t', '--tempfolder', type=str, required=True,
                             help='Workingfolder')
 
-        {"gap": 10, "strength": 300}
 
-        args = parser.parse_args()
+        args=parser.parse_args()
 
-        inputarray = vars(args)
+
 
         inputarray = []
 

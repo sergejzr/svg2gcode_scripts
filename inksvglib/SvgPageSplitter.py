@@ -101,6 +101,7 @@ class SvgPageSplitter:
                     process["outfile"]=tmpfile
         return materials
 
+
     def fromCommandline(self):
         parser = argparse.ArgumentParser(
             description='Splits an SVG file according to layer hierachy. Each leaf-layer exports to a separate file')

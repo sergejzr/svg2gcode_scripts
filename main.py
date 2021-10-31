@@ -7,6 +7,9 @@ from os.path import isfile, join
 from argparserlib.svgtoolargparser import *
 from pathlib import Path
 import shutil
+# take second element for sort
+def takeFirst(elem):
+    return elem["order"]
 
 argparser = ArgumentColonparser(arguments=[{"name": "material", "type": "str", "required": True},
                                            {"name": "procedure", "type": "str", "required": True},
@@ -16,6 +19,7 @@ argparser = ArgumentColonparser(arguments=[{"name": "material", "type": "str", "
                                             {"name": "support_strength", "type": "int"},
                                             {"name": "support_gap", "type": "float"}
                                            ])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -40,6 +44,11 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', type=str,
                         help='Tell me what are you doing all the time')
 
+    parser.add_argument('-p', '--procedure_execution_ordering', type=str, nargs='+', required=True,
+                        help='In which order should the procedures be carried out. Example "1:Engrave 2:Cut" => means engrave first, then cut.')
+
+
+
     args = parser.parse_args()
 
     layersettings = {}
@@ -50,11 +59,13 @@ if __name__ == '__main__':
         argparser.prove(asetting)
         layersettings[asetting["material"] + "_" + asetting["procedure"]] = asetting
 
+    ordering=args.procedure_execution_ordering
 
     tmpdir = args.tempfolder
 
     tmpdircrop=os.path.join(tmpdir,"crop")
     tmpdirsplit = os.path.join(tmpdir, "split")
+    tmpdirgcode = os.path.join(tmpdir, "gcode")
     if not os.path.exists(tmpdircrop):
         os.makedirs(tmpdircrop)
 
@@ -80,10 +91,19 @@ if __name__ == '__main__':
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    output = qx(["python","pagesplit.py", "--file", args.file, "--outputfolder", tmpdirsplit,"--tempfolder", tmpdircrop])
+    output = qx(["python","svgsplit.py", "--file", args.file, "--outputfolder", tmpdirsplit,"--tempfolder", tmpdircrop])
+
+    orderingargs = args.procedure_execution_ordering
+    ordering = {}
+
+    if orderingargs:
+        for ord in orderingargs:
+            splord = ord.split(":")
+            ordering[splord[1]] = splord[0]
 
     onlyfiles = [f for f in listdir(tmpdirsplit) if isfile(join(tmpdirsplit, f))]
     groupfiles = {}
+
 
     for f in onlyfiles:
         nameparts = f.split(".")
@@ -99,11 +119,17 @@ if __name__ == '__main__':
 
         if not page in groupfiles[material]:
                 groupfiles[material][page] = []
+        idx=len(groupfiles[material][page])
+
+        ordering[splord[1]] = splord[0]
+
+        if procedure in ordering:
+            idx=ordering[procedure]
 
         groupfiles[material][page].append(
-            {"page": page, "material": material, "procedure": procedure, "filename": f})
+            {"page": page, "material": material, "procedure": procedure, "filename": f,"order":idx})
 
-    #
+
     for fkey in groupfiles:
         print(fkey + ":" + str(groupfiles[fkey]))
 
@@ -115,7 +141,8 @@ if __name__ == '__main__':
 
         for pagenr in groupfiles[material]:
             page=groupfiles[material][pagenr]
-            arguments = ["python", "mergesvg2gcode.py"]
+            arguments = ["python", "svg2gcode_merge.py"]
+            groupfiles[material][pagenr].sort(key=takeFirst)
             for meta in page:
                 if meta["material"] in skipmaterials or meta["procedure"] in skipprocedures:
                     print("I skip the material "+meta["material"]+" or procedure "+meta["procedure"]+". Skipped = "+str(skipprocedures))
@@ -162,7 +189,7 @@ if __name__ == '__main__':
             if not os.path.exists(pageoutputdir):
                 os.makedirs(pageoutputdir)
 
-            tempoutputdir = join(tmpdir, title+"."+meta["material"]+"."+meta["page"])
+            tempoutputdir = join(tmpdirgcode, title+"."+meta["material"]+"."+meta["page"])
             if not os.path.exists(tempoutputdir):
                 os.makedirs(tempoutputdir)
 
@@ -172,7 +199,7 @@ if __name__ == '__main__':
 
             arguments.append("--tempfolder")
             arguments.append(tempoutputdir)
-            tempoutputdir
+
             print(arguments)
 
             output = qx(arguments)
@@ -183,3 +210,4 @@ if __name__ == '__main__':
     exit(0)
 
 
+#--file toy.svg --tempfolder tmp --outputfolder toy --layersettings material:"Verkleidung" procedure:Cut speed:300 strength:950 repeat:1 support_gap:1 support_strength:0 --layersettings material:"Sturopor" procedure:Cut speed:500 strength:950 support_gap:1 support_strength:0 --layersettings material:"Holz" procedure:Cut speed:20 repeat:1 strength:950 support_gap:1 support_strength:0 --layersettings material:"Glas" procedure:Cut speed:300 repeat:1 strength:950 --layersettings material:"Verkleidung" procedure:Engrave speed:1000  strength:950 --layersettings material:"Sturopor" procedure:Engrave speed:700  strength:300 --layersettings material:"Holz" procedure:Engrave speed:700  strength:300 --layersettings material:"Glas" procedure:Cut speed:700  strength:500 --layersettings material:"Glas" procedure:Engrave speed:300 strength:950 --procedure_execution_ordering 1:Engrave 2:Cut --skipprocedure Meta --skipmaterial Frames
