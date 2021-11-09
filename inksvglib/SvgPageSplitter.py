@@ -5,6 +5,7 @@ import copy
 from subprocess import check_output as qx
 import argparse
 import hashlib
+from pathlib import Path
 SVG_NS = "http://www.w3.org/2000/svg"
 
 class SvgPageSplitter:
@@ -94,10 +95,10 @@ class SvgPageSplitter:
                     #if not os.path.exists(processsplitfolder):
                     #    os.makedirs(processsplitfolder)
 
-                    tmpfile = os.path.join(export_folder,  os.path.splitext(infile)[0]+"."+material["label"]+"."+page["label"]+"."+process["label"]+ ".svg")
+                    tmpfile = os.path.join(export_folder,  Path(infile).stem+"."+material["label"]+"."+page["label"]+"."+process["label"]+ ".svg")
                     process_tree.write(tmpfile)
 
-                    output = qx(['inkscape', tmpfile, "-o", tmpfile])
+                    output = qx(['inkscape', "--export-text-to-path", tmpfile, "-o", tmpfile])
                     process["outfile"]=tmpfile
         return materials
 

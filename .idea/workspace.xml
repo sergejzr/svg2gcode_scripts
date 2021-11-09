@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" beforeDir="false" afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inksvglib/SvgPageSplitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/inksvglib/SvgPageSplitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_command_line,txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +55,7 @@
       <recent name="$PROJECT_DIR$/jupyter" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main_new">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -69,7 +69,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--file $PROJECT_DIR$/L410-complettTreeBigCleanAT.svg --tempfolder tmp --outputfolder toyATresult --layersettings material:&quot;Wood1mm&quot; procedure:Cut speed:100 strength:950 repeat:1 support_gap:1 support_strength:0 --layersettings material:&quot;Styrofoam&quot; procedure:Cut speed:500 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Wood3mm&quot; procedure:Cut speed:20 repeat:1 strength:950 support_gap:1 support_strength:0 --layersettings material:&quot;Glas&quot; procedure:Cut speed:300 repeat:1 strength:950 --layersettings material:&quot;Wood1mm&quot; procedure:Engrave speed:700  strength:950 --layersettings material:&quot;Styrofoam&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Wood3mm&quot; procedure:Engrave speed:700  strength:300 --layersettings material:&quot;Glas&quot; procedure:Cut speed:700  strength:500 --layersettings material:&quot;Glas&quot; procedure:Engrave speed:300 strength:950 --procedure_execution_ordering 1:Engrave 2:Cut --skipprocedure Meta --skipmaterial Frames" />
+      <option name="PARAMETERS" value="--file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder Toy -v True" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -191,8 +191,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.support" />
         <item itemvalue="Python.svgsplit" />
@@ -232,15 +232,10 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>202</line>
-          <option name="timeStamp" value="109" />
+          <line>63</line>
+          <option name="timeStamp" value="128" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="os.path.splitext(infile)[0]" language="Python" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

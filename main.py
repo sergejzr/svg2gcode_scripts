@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import re
 from subprocess import check_output as qx
@@ -7,9 +8,13 @@ from os.path import isfile, join
 from argparserlib.svgtoolargparser import *
 from pathlib import Path
 import shutil
+import configparser
+
 # take second element for sort
 def takeFirst(elem):
     return elem["order"]
+
+logging.basicConfig(level=logging.INFO)
 
 argparser = ArgumentColonparser(arguments=[{"name": "material", "type": "str", "required": True},
                                            {"name": "procedure", "type": "str", "required": True},
@@ -39,27 +44,106 @@ if __name__ == '__main__':
 
     parser.add_argument('-o', '--outputfolder', type=str, required=True,
                         help='Input SVG containing layer')
-    parser.add_argument('-l', '--layersettings', type=argparser, nargs='+', required=True, action='append',
+    parser.add_argument('-l', '--layersettings', type=argparser, nargs='+', action='append',
                         help='list of file names with parameters')
+
+    parser.add_argument('-c', '--configfile', type=str,
+                        help='Configuration settings for diffretn material/process layers')
+
     parser.add_argument('-v', '--verbose', type=str,
                         help='Tell me what are you doing all the time')
 
-    parser.add_argument('-p', '--procedure_execution_ordering', type=str, nargs='+', required=True,
+    parser.add_argument('-p', '--procedure_execution_ordering', type=str, nargs='+',
                         help='In which order should the procedures be carried out. Example "1:Engrave 2:Cut" => means engrave first, then cut.')
 
 
 
     args = parser.parse_args()
 
+    if not args.verbose:
+        logging.disable()
+
+    if not os.path.exists(args.file):
+        raise argparse.ArgumentTypeError(
+            "Error: ' Inpuitfile '{}' does not exist!".format(
+                args.file))
+
+
+    if not args.layersettings and not args.configfile:
+        raise argparse.ArgumentTypeError(
+            "Error: Neither --configfile (-c), nor --layersettings are provided!")
+
+    if args.layersettings and args.configfile:
+        logging.debug("Both, --layersettings and  --configfile are provided. I will take command line --layersettings by default")
+
     layersettings = {}
 
+    logging.info("Parse inputfile '{}'".format(str(args.file)))
 
-    for req in args.layersettings:
-        asetting = combine(req)
-        argparser.prove(asetting)
-        layersettings[asetting["material"] + "_" + asetting["procedure"]] = asetting
+    orderingargs = args.procedure_execution_ordering
 
-    ordering=args.procedure_execution_ordering
+    ordering = {}
+    skipprocedures = {}
+    skipmaterials = {}
+
+    if orderingargs:
+        for ord in orderingargs:
+            splord = ord.split(":")
+            ordering[splord[1]] = splord[0]
+
+    if args.configfile:
+        config = configparser.ConfigParser()
+        config.read(args.configfile)
+        config.sections()
+
+        for section in config.sections():
+
+
+            if section == "Settings":
+                procedure_execution_ordering=config[section]["procedure_execution_ordering"]
+                if procedure_execution_ordering:
+                    oi=0
+                    for procedure in procedure_execution_ordering.split(","):
+                        ordering[procedure]=oi
+                        oi+=1
+                skipprocedurelist=config[section]["skipprocedure"]
+                if skipprocedurelist:
+                    for procedure in skipprocedurelist.split(","):
+                        skipprocedures[procedure] = True
+
+                skipmaterialslist = config[section]["skipmaterial"]
+                if skipmaterialslist:
+                    for material in skipmaterialslist.split(","):
+                        skipmaterials[material] = True
+            else:
+                pathchuncks=section.split(".")
+                material=pathchuncks[0]
+                procedure=pathchuncks[1]
+                asetting={"material":material,"procedure":procedure}
+                for key in config[section]:
+                    asetting[key]=config[section][key]
+
+                argparser.prove(asetting)
+                layersettings[material + "_" + procedure] = asetting
+
+
+
+        config.sections()
+
+
+    else:
+        for req in args.layersettings:
+            asetting = combine(req)
+            argparser.prove(asetting)
+            layersettings[asetting["material"] + "_" + asetting["procedure"]] = asetting
+
+    if args.procedure_execution_ordering:
+        orderingargs = args.procedure_execution_ordering
+
+    if args.skipprocedure:
+        for procedure in args.skipprocedure:
+            skipprocedures[procedure] = True
+
 
     tmpdir = args.tempfolder
 
@@ -75,14 +159,10 @@ if __name__ == '__main__':
     title=Path(args.file).stem
     outdir = join(args.outputfolder, title)
 
-    skipprocedures={}
-
-    if args.skipprocedure:
-        for procedure in args.skipprocedure:
-            skipprocedures[procedure] = True
 
 
-    skipmaterials = {}
+
+
     if args.skipmaterial:
         for material in args.skipmaterial:
             skipmaterials[material] = True
@@ -90,16 +170,10 @@ if __name__ == '__main__':
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
-
+    logging.info("Split layers into separate files and store them in '{}'".format(tmpdirsplit))
     output = qx(["python","svgsplit.py", "--file", args.file, "--outputfolder", tmpdirsplit,"--tempfolder", tmpdircrop])
+    logging.info("Splitting done!")
 
-    orderingargs = args.procedure_execution_ordering
-    ordering = {}
-
-    if orderingargs:
-        for ord in orderingargs:
-            splord = ord.split(":")
-            ordering[splord[1]] = splord[0]
 
     onlyfiles = [f for f in listdir(tmpdirsplit) if isfile(join(tmpdirsplit, f))]
     groupfiles = {}
@@ -110,6 +184,7 @@ if __name__ == '__main__':
         material = nameparts[1]
         procedure = nameparts[len(nameparts) - 2]
         page = nameparts[2]
+        logging.info("Reading material:'"+material+"', procedure:'"+procedure+"', page:'"+page+"'")
 
         if material + "_" + procedure not in layersettings and material not in skipmaterials and procedure not in skipprocedures:
             raise Exception("Don't know how to carry out "+procedure+" for material "+material+". Check input arguments")
@@ -121,7 +196,7 @@ if __name__ == '__main__':
                 groupfiles[material][page] = []
         idx=len(groupfiles[material][page])
 
-        ordering[splord[1]] = splord[0]
+
 
         if procedure in ordering:
             idx=ordering[procedure]
@@ -129,14 +204,18 @@ if __name__ == '__main__':
         groupfiles[material][page].append(
             {"page": page, "material": material, "procedure": procedure, "filename": f,"order":idx})
 
+    cntfiles = 0
+    allfiles = 0
 
-    for fkey in groupfiles:
-        print(fkey + ":" + str(groupfiles[fkey]))
+    for material in groupfiles:
+        for page in groupfiles[material]:
+            allfiles=allfiles+1
+
 
 
 
     for material in groupfiles:
-        print(material + ":" + str(groupfiles[material]))
+       # print(material + ":" + str(groupfiles[material]))
 
 
         for pagenr in groupfiles[material]:
@@ -145,7 +224,7 @@ if __name__ == '__main__':
             groupfiles[material][pagenr].sort(key=takeFirst)
             for meta in page:
                 if meta["material"] in skipmaterials or meta["procedure"] in skipprocedures:
-                    print("I skip the material "+meta["material"]+" or procedure "+meta["procedure"]+". Skipped = "+str(skipprocedures))
+                    logging.info("I skip the material "+meta["material"]+" or procedure "+meta["procedure"]+". Skipped = "+str(skipprocedures))
                     continue
                 arguments.append("--file")
                 arguments.append(join(tmpdirsplit, meta["filename"]))
@@ -200,12 +279,13 @@ if __name__ == '__main__':
             arguments.append("--tempfolder")
             arguments.append(tempoutputdir)
 
-            print(arguments)
-
+            #print(arguments)
+            logging.info("Process page "+str(cntfiles)+"of "+str(allfiles)+". Merge with settings: "+str(arguments))
+            cntfiles=cntfiles+1
             output = qx(arguments)
-            print(output)
+           # print(output)
 
-    #shutil.rmtree(tmpdir)
+    shutil.rmtree(tmpdir)
 
     exit(0)
 
