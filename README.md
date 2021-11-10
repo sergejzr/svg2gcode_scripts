@@ -35,19 +35,17 @@ Output:
   For each page-layer a GCODE fiel is generated where all procedure layers are merged into one. Thus a page can be carried out at once.
 
 
-
+### Pre-Requisites
+- <a href="https://inkscape.org/">inkscape</a> for the program to easily design of parts in SVG
+- <a href="https://github.com/arkypita/LaserGRBL">LaserGRB</a>Or othe CGode programm
+- Install Python (e.g simplest through <a href="https://www.anaconda.com/products/individual">Anaconda</a>) 
 ### Installation
+ - (2) Download/clone the project 
+ - (3) Install python dependencies:
+      pip install -r requirements.txt
+ - (4) Done
+ 
 
-(1) Install Python (e.g simplest through <a href="https://www.anaconda.com/products/individual">Anaconda</a>)
-
-(2) Download/clone the project 
-
-(3) Install python dependencies:
-pip install -r requirements.txt
-
-(4) Done
-
-### Quick Start
 After installation just run the toy example with supplied toy.svg and material.ini:
 
 python main.py --file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder toyresult -v True
@@ -75,8 +73,8 @@ Example simulator: https://ncviewer.com/
 
 
 ### CREDITS:
-<a href="https://inkscape.org/">inkscape</a> for the program to easily design of parts in SVG
-<a href="https://pypi.org/project/pygcode/">pygcode</a> for the packege for conversion SVG to GCODE
-<a href="https://github.com/arkypita/LaserGRBL">LaserGRB</a>for a great UI to display GCODE and communicate with hardware
-<a href="https://www.ebay.de/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=cnc+laser&_sacat=0">All cheap CNC Laser hardware</a> for making real objects out of computer drawings
+- <a href="https://inkscape.org/">inkscape</a> for the program to easily design of parts in SVG
+- <a href="https://pypi.org/project/pygcode/">pygcode</a> for the packege for conversion SVG to GCODE
+- <a href="https://github.com/arkypita/LaserGRBL">LaserGRB</a>for a great UI to display GCODE and communicate with hardware
+- <a href="https://www.ebay.de/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=cnc+laser&_sacat=0">All cheap CNC Laser hardware</a> for making real objects out of computer drawings
 
