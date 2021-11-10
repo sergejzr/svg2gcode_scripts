@@ -3,8 +3,11 @@ Scripts for converting / batchprocessing of multilayerd inkscape SVG files into 
 <img width ="800px" src="doc/step.svg"/>
 
 Input(1): Multilayered Inkscape SVG, where each Layer should be engraved/cut with different parameters
+
 Input(2): Parameter setting file
+
 Output: GCode to process directly in laserGRBL
+
 Optional: The script can auto-generate supports (leaving tiny edge part so the object can not fall out upon cut)
 
 
