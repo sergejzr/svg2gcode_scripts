@@ -1,5 +1,20 @@
 # svg2gcode
-Scripts for manipulating / batchprocessing of SVG files into "multi-layered", "multi-passed" "auto-supported-parts" Gcode for variety of CNC progamms like laserGRBL
+Scripts for converting / batchprocessing of multilayerd inkscape SVG files into GCODE for variety of CNC progamms like laserGRBL
+<img src="doc/step.svg"/>
+Input(1): Multilayered Inkscape SVG, where each Layer should be engraved/cut with different parameters
+Input(2): Parameter setting file
+Output: GCode to process directly in laserGRBL
+Optional: The script can auto-generate supports (leaving tiny edge part so the object can not fall out upon cut)
+
+
+If have a larger project, you can keep all parts in one file and only separate them through layers in pages. In this case, the script can generate a GCode file for each page.
+<img src="toy.svg"/>
+
+Explanation:
+For my CNC project, I work with inkscape  and often want to have all parts and peeces to be in a single SVG file, where I can adjust and adapt the drawing without loosing the overview. However each part and peece can require own material and cutting/engraving parameters. For example I would like first to engrave parts and cut them after, but leaving small supports such that the parts do not fall off. This script package should do exactly this!
+
+
+More specifically
 
 Input:
   (1)A multilayered SVG file. Each root layers name correspond to a material (For example Wood/Sturofoam/Glas etc.) as defined by user. Each material-layer can contain multiple page-layers. Each page layer can contains multiple procedure layers (example: Cut/Engrave/Write etc.) as defined by user.
@@ -17,27 +32,25 @@ Input:
 Output:
   For each page-layer a GCODE fiel is generated where all procedure layers are merged into one. Thus a page can be carried out at once.
 
-Explanation:
-For my CNC project, I work with inkscape  and often want to have all parts and peeces to be in a single SVG file, where I can adjust and adapt the drawing without loosing the overview. However each part and peece can require own material and cutting/engraving parameters. For example I would like first to engrave parts and cut them after, but leaving small supports such that the parts do not fall off. This script package should do exactly this!
-<img src="toy.svg"/>
-Example call (to put all gcode into the folder "toyresult"):
 
-python main.py --file toy.svg --tempfolder tmp --outputfolder toyresult \
---layersettings material:"Wood1mm" procedure:Cut speed:100 strength:950 repeat:2 support_gap:2 support_strength:500 \
---layersettings material:"Styrofoam" procedure:Cut speed:500 strength:950 support_gap:1 support_strength:300 \
---layersettings material:"Wood3mm" procedure:Cut speed:20 repeat:5 strength:950 support_gap:2 support_strength:500 \
---layersettings material:"Glas" procedure:Cut speed:300 repeat:2 strength:950 \
---layersettings material:"Wood1mm" procedure:Engrave speed:700  strength:950 \
---layersettings material:"Styrofoam" procedure:Engrave speed:700  strength:300 \
---layersettings material:"Wood3mm" procedure:Engrave speed:700  strength:300 \
---layersettings material:"Glas" procedure:Cut speed:700  strength:500 \
---layersettings material:"Glas" procedure:Engrave speed:300 strength:950  \
---skipprocedure Meta --skipmaterial Frames
 
 Installation:
-You will just need python with numpy and the svg2code https://github.com/holgafreak/svg2gcode/ (credits to holgafreak).
-If I have some time, I will make it 100% python or java.
+(1) Install Python (e.g simplest through <a href="https://www.anaconda.com/products/individual">Anaconda</a>)
+(2) Get python dependencies
 
-Known issues:
-The software has some times some issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
+Quick start
+After installation just run the toy example:
+
+python main.py --file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder toyresult -v True
+
+Where material.ini looks like:
+[Wood.Cut]
+strength=900
+Speed=700
+
+
+Known issues/limitations:
+The software is highly experimental, I had to learn many things by doing and I had to do it fast. The code is a mess. The names of the parametrers are not standartized and should be renamed in the futute (e.g "speed" and "strength" should become "F" and "S", respectively)
+
+The software may have issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
 Example simulator: https://ncviewer.com/
