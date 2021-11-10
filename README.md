@@ -58,3 +58,11 @@ The software is highly experimental, I had to learn many things by doing and I h
 
 The software may have issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
 Example simulator: https://ncviewer.com/
+
+
+CREDITS:
+<href="https://inkscape.org/">inkscape</a> for the program to easily design of parts in SVG
+<a href="https://pypi.org/project/pygcode/">pygcode</a> for the packege for conversion SVG to GCODE
+<a href="https://github.com/arkypita/LaserGRBL">LaserGRB</a>for a great UI to display GCODE and communicate with hardware
+<a href="https://www.ebay.de/sch/i.html?_from=R40&_trksid=p2380057.m570.l1313&_nkw=cnc+laser&_sacat=0">All cheap CNC Laser hardware</a> for making real objects out of computer drawings
+
