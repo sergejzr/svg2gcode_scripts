@@ -1,0 +1,4 @@
+Jinja2==3.0.2
+MarkupSafe==2.0.1
+numpy==1.21.3
+svg-to-gcode==1.5.4
