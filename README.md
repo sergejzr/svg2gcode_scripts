@@ -22,12 +22,12 @@ Input:
   (1)A multilayered SVG file. Each root layers name correspond to a material (For example Wood/Sturofoam/Glas etc.) as defined by user. Each material-layer can contain multiple page-layers. Each page layer can contains multiple procedure layers (example: Cut/Engrave/Write etc.) as defined by user.
  
  input.svg
-   |-Material - Layer (Wood/Sturofoam/etc.)
-   |    |-PageNr - Layer
-   |        |-Procedure -Layer (Cut/Engrave/etc.)
-   |            object1
-   |            objectn
-   |-Material2 ... 
+  - |-Material - Layer (Wood/Sturofoam/etc.)
+  - |    |-PageNr - Layer
+  - |        |-Procedure -Layer (Cut/Engrave/etc.)
+  - |            object1
+  - |            objectn
+  - |-Material2 ... 
             
   (2) A set of rules of how to parametrize a particular material-procedure combination. Parameters include feed, laser strength, passes, whether support should be added to cutting peeces, etc.
 
@@ -55,6 +55,16 @@ python main.py --file toy.svg --configfile=material.ini --tempfolder tmp --outpu
 The output will be stored into the folder "toyresult" page by page.
 
 Open and use any generated GCode file from "toyresult" in your CNC programm (like laserGRBL)
+
+### Setting Details
+The Layers of the SVG should be in Hierachy: Material->Page->Porcess. The ini file should have a section for each Material-Process pair with parameters as follows:
+
+- [Wood1mm.Cut] #Format Material.Procedure
+- speed=300 # The F parameter of the GCode - determines the cutting speed (or feed) in mm/min
+- strength=950 # The S aprameter of the GCode - determines the laser strength (0-1000) 
+- support_gap=1 # If present, the support gaps will be added automatically to each cut. The value determins the length of support in mm.
+- support_strength=0 # Determins the laser strength (S) when cutting the sipport part (0(laser off) - 1000 (laser 100%)).
+
 
 ### Known issues/limitations:
 The software is highly experimental, I had to learn many things by doing and I had to do it fast. The code is a mess. The names of the parametrers are not standartized and should be renamed in the futute (e.g "speed" and "strength" should become "F" and "S", respectively)
