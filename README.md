@@ -64,6 +64,7 @@ The Layers of the SVG should be in Hierachy: Material->Page->Porcess. The ini fi
 - strength=950 # The S aprameter of the GCode - determines the laser strength (0-1000) 
 - support_gap=1 # If present, the support gaps will be added automatically to each cut. The value determins the length of support in mm.
 - support_strength=0 # Determins the laser strength (S) when cutting the sipport part (0(laser off) - 1000 (laser 100%)).
+- repeat=2 # Times the process should be repeat. whilst engraving typically does not need this, cutting my often need more then 1 pass.
 
 
 ### Known issues/limitations:
