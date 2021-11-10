@@ -40,24 +40,29 @@ Output:
 
 
 ### Installation
+
 (1) Install Python (e.g simplest through <a href="https://www.anaconda.com/products/individual">Anaconda</a>)
-(2) Get python dependencies
+
+(2) Download/clone the project 
+
+(3) Install python dependencies:
+pip install -r requirements.txt
+
+(4) Done
 
 ### Quick Start
-After installation just run the toy example:
+After installation just run the toy example with supplied toy.svg and material.ini:
 
 python main.py --file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder toyresult -v True
 
-Where material.ini looks like:
-[Wood.Cut]
-strength=900
-Speed=700
+The output will be stored into the folder "toyresult" page by page.
 
+Open and use any generated GCode file from "toyresult" in your CNC programm (like laserGRBL)
 
 ### Known issues/limitations:
 The software is highly experimental, I had to learn many things by doing and I had to do it fast. The code is a mess. The names of the parametrers are not standartized and should be renamed in the futute (e.g "speed" and "strength" should become "F" and "S", respectively)
 
-The software may have issues in positioning different layers. Please check the generated output (even better would be to simulate ) before cutting
+The software may have issues. Please check the generated output (even better would be to simulate ) before cutting
 Example simulator: https://ncviewer.com/
 
 
