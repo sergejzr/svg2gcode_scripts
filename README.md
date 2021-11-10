@@ -1,6 +1,6 @@
 # svg2gcode
 Scripts for converting / batchprocessing of multilayerd inkscape SVG files into GCODE for variety of CNC progamms like laserGRBL
-<img width ="600px" src="doc/step.svg"/>
+<img width ="800px" src="doc/step.svg"/>
 
 Input(1): Multilayered Inkscape SVG, where each Layer should be engraved/cut with different parameters
 Input(2): Parameter setting file
