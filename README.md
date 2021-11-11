@@ -1,4 +1,4 @@
-# svg2gcode
+# svg2gcode  (CNC Engrave & Cut in one SVG file)
 Scripts for converting / batchprocessing of multilayerd inkscape SVG files into GCODE for variety of CNC progamms like laserGRBL
 
 <img width ="800px" src="doc/step.svg"/>
