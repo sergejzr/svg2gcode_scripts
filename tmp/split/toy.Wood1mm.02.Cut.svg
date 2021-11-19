@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   inkscape:label="LA410-complettTree"
+   sodipodi:docname="toy.Wood1mm.02.Cut.svg"
+   inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+   id="svg1004"
+   version="1.1"
+   viewBox="0 0 193.56888 333.94194"
+   height="333.94196mm"
+   width="193.56889mm"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs26" />
+  <sodipodi:namedview
+     id="namedview24"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm" />
+  <g
+     id="layer20"
+     inkscape:label="Wood1mm"
+     inkscape:groupmode="layer"
+     transform="translate(-1983.7321,-1523.5866)"
+     style="display:inline">
+    <g
+       inkscape:groupmode="layer"
+       id="layer30"
+       inkscape:label="02"
+       style="display:inline">
+      <g
+         id="layer3-5"
+         inkscape:label="Cut"
+         style="display:inline"
+         transform="translate(1191.2232,1203.0115)"
+         inkscape:groupmode="layer">
+        <path
+           id="path20926"
+           style="display:inline;fill:#ffffff;stroke:#0000bf;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           d="m 927.5415,489.20944 a 50,50 0 0 1 -50,50 50,50 0 0 1 -50,-50 50,50 0 0 1 50,-50 50,50 0 0 1 50,50 z" />
+        <path
+           id="path21058"
+           style="display:inline;fill:#ffffff;stroke:#0000bf;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           d="m 902.332,654.162 -50.842,-12.188 -51.711,-7.721 35.977,-37.937 32.541,-40.922 14.866,50.125 z" />
+      </g>
+    </g>
+  </g>
+</svg>

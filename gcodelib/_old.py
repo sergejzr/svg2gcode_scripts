@@ -19,15 +19,7 @@ from subprocess import check_output as qx
 import math
 import numpy as np
 import copy
-from os import listdir
-from os.path import isfile, join
-import configparser
-import logging
 
-
-# take second element for sort
-def takeFirst(elem):
-    return elem["order"]
 
 class translateCoo:
 
@@ -247,13 +239,13 @@ class CutRepeater:
                         else:
                             points.append({"linenr": i - 1})
 
-            split = self.findGoodSupport(points, float(support["gap"]))
+            split = self.findGoodSupport(points, support["gap"])
 
             if split and split["type"] == "split":
                 lline = split["gap"]
                 a = np.array([lline["p1"]["x"], lline["p1"]["y"]])
                 b = np.array([lline["p2"]["x"], lline["p2"]["y"]])
-                supportsplit = self.splitinthemiddle(a, b, float(support["gap"]))
+                supportsplit = self.splitinthemiddle(a, b, support["gap"])
 
                 mpx = supportsplit[0][1][0]
                 mpy = supportsplit[0][1][1]
@@ -301,10 +293,8 @@ class CutRepeater:
 
                 if not gapclosed:
                     print("WTF?")
-        passes = int(passes)
         passestrart = passes
         returndata = ""
-
         while passes > 0:
             passes = passes - 1
             returndata = returndata + "\n( start pass " + str(passestrart - passes) + " of " + str(
@@ -513,9 +503,34 @@ class Svg2GcodeMerger:
             info["shift"]["x"] = info["shift"]["x"] + paddingx
 
         completedata = ""
-        arguments=[]
+
         filenames = ""
         for info in inputfiles:
+            s2gkeys = {}
+            for akey in s2g:
+                if s2g[akey]:
+                    s2gkeys[akey] = (s2g[akey])
+                else:
+                    s2gkeys[akey] = ""
+
+            for akey in info["s2g"]:
+                if s2g[akey]:
+                    s2gkeys[akey] = (s2g[akey])
+                else:
+                    s2gkeys[akey] = ""
+
+            arguments = []
+
+            for akey in s2gkeys:
+                arguments.append("-" + akey)
+                if s2g[akey] and s2g[akey] != "":
+                    arguments.append(s2g[akey])
+
+
+            arguments.append('-Y ' + str(info["shift"]["y"]))
+            arguments.append('-X ' + str(info["shift"]["x"]))
+            arguments.append('-f ' + str(info["speed"]))
+            arguments.append(info["filename"])
 
             result = hashlib.md5(info["filename"].encode('utf-8'))
 
@@ -523,26 +538,31 @@ class Svg2GcodeMerger:
                                                 result.hexdigest() + os.path.basename(info["filename"]) + ".gcode")
 
             conv= SVG2GCodeConverterPython()
+            #arguments.append(info["tmpfilegcode"])
             conv(info)
+
+
+
+            #           output = qx(
+            #               ['/home/szerr/git/svg2gcode/svg2gcode', '-F', '-B', '-w ' + str(info["dim"]["w"]),
+            #                '-Y ' + str(info["shift"]["y"]),
+            #                '-X ' + str(info["shift"]["x"]),
+            #                "-f " + str(info["speed"]), info["filename"] + "_cropped.svg", info["filename"] + ".gcode"])
 
             # Reading data from file1
             with open(info["tmpfilegcode"]) as fp:
                 data = fp.read()
                 fp.close()
-
-
             supportstr="no"
-            if not "support" in info:
-                info["support"]=False
-            if not "repeat" in info:
-                info["repeat"]=1
-            if "support" in info and info["support"]:
+            if info["support"]:
                 supportstr = "yes, "+str(info["support"])+"'"
             cleandata = "( file start "+info["filename"]+")\n( speed:"+str(info["speed"])+", strength:"+str(info["strength"])+\
                         " codestyle='"+codestyle+"', passes:"+str(info["repeat"])+" support:"+supportstr+" )\n"+\
                         self.svg2cleangc(data, info["speed"], info["strength"], codestyle, info["repeat"], info["support"])+\
                         "( file end "+info["filename"]+")\n"
-            repeat = int(info["repeat"])
+            #            if jumpspeed:
+            #                cleandata = re.sub('S0\nG(.*)F(\\d+)', 'S0\nG\\1F' + str(jumpspeed), cleandata, flags=re.MULTILINE)
+            repeat = info["repeat"]
 
             roundstring = ""
             while repeat > 0 and False:
@@ -573,222 +593,53 @@ class Svg2GcodeMerger:
                                          ])
         parser = argparse.ArgumentParser(
             description='Merges inkscape SVG files list into  a laserGRBL conform gcode file.')
-        parser.add_argument('-i', '--inputfolder', type=str,required=True,
-                            help='Folder with SVGs to merge pagewise')
+        parser.add_argument('-f', '--file', type=fileparser, nargs='+', required=True, action='append',
+                            help='list of file names with parameters')
+        parser.add_argument('--globals2g', type=s2gtype(), nargs='+',
+                            help='list of options passed directly to svg2gcode as default values. Same options supplied to files override those values')
+        parser.add_argument('-a', '--autoscale', type=bool, default=True,
+                            help='will auto scale the image using vg information')
         parser.add_argument('-p', '--padding', type=Paddingtype(), nargs='+',
                             help='Padding of the image, so CNC doesnt have to work on border limits')
+        parser.add_argument('--autoshiftY', type=bool, nargs='?', default=False,
+                            help='Shifts the whole image such that it can be started from left bottom corner')
         parser.add_argument('--codestyle', type=str, nargs='+', default="laserGRBL",
                             help='Only one option is supported "laserGRBL" ')
-        parser.add_argument('-c', '--configfile', type=str,
-                            help='Configuration settings for different material/process layers')
-        parser.add_argument('-o', '--outputfolder', type=str, required=True, help='output file *.gcode')
-        parser.add_argument('-t', '--tempfolder', type=str, required=False,
+        parser.add_argument('-o', '--output', type=str, required=True, help='output file *.gcode')
+        parser.add_argument('-t', '--tempfolder', type=str, required=True,
                             help='Workingfolder')
-
 
 
         args=parser.parse_args()
 
-        tempfolder=str(args.tempfolder)
-        if not args.tempfolder:
-            tempfolder="tmp"
 
-        ordering = {}
-        skipprocedures = {}
-        skipmaterials = {}
-        layersettings = {}
-        if args.configfile:
-            config = configparser.ConfigParser()
-            config.read(args.configfile)
-            config.sections()
 
-            for section in config.sections():
+        inputarray = []
 
-                if section == "Settings":
-                    procedure_execution_ordering = config[section]["procedure_execution_ordering"]
-                    if procedure_execution_ordering:
-                        oi = 0
-                        for procedure in procedure_execution_ordering.split(","):
-                            ordering[procedure] = oi
-                            oi += 1
-                    skipprocedurelist = config[section]["skipprocedure"]
-                    if skipprocedurelist:
-                        for procedure in skipprocedurelist.split(","):
-                            skipprocedures[procedure] = True
+        for filedesc in args.file:
+            filedesc = combine(filedesc)
+            fileparser.prove(filedesc)
 
-                    skipmaterialslist = config[section]["skipmaterial"]
-                    if skipmaterialslist:
-                        for material in skipmaterialslist.split(","):
-                            skipmaterials[material] = True
+            curfile = {"filename": filedesc["file"],
+                       "speed": filedesc["speed"],
+                       "strength": filedesc["strength"],
+                       "repeat": filedesc["repeat"],
+                       "s2g": filedesc["s2g"]
+                       }
+            support=False
+            if "support_gap" in filedesc and filedesc["support_gap"]:
+                support = {"support_gap": filedesc["support_gap"]}
+
+                if not "support_strength" in filedesc and not filedesc["support_strength"]:
+                    support["support_strength"]= 0
                 else:
-                    pathchuncks = section.split(".")
-                    material = pathchuncks[0]
-                    procedure = pathchuncks[1]
-                    asetting = {"material": material, "procedure": procedure}
-                    for key in config[section]:
-                        asetting[key] = config[section][key]
-                    layersettings[material + "_" + procedure] = asetting
-
-
-
-
-        onlyfiles = [f for f in listdir(args.inputfolder) if isfile(join(args.inputfolder, f))]
-
-        groupfiles = {}
-        mainfilename=False
-        for f in onlyfiles:
-
-            nameparts = f.split(".")
-            if not mainfilename:
-                mainfilename = nameparts[0]
-            material = nameparts[1]
-            procedure = nameparts[len(nameparts) - 2]
-            page = nameparts[2]
-            logging.info("Reading material:'" + material + "', procedure:'" + procedure + "', page:'" + page + "'")
-
-            if material + "_" + procedure not in layersettings and material not in skipmaterials and procedure not in skipprocedures:
-                raise Exception(
-                    "Don't know how to carry out " + procedure + " for material " + material + ". Check input arguments")
-
-            if not material in groupfiles:
-                groupfiles[material] = {}
-
-            if not page in groupfiles[material]:
-                groupfiles[material][page] = []
-            idx = len(groupfiles[material][page])
-
-            if procedure in ordering:
-                idx = ordering[procedure]
-
-            groupfiles[material][page].append(
-                {"page": page, "material": material, "procedure": procedure, "filename": join(args.inputfolder, f), "order": idx})
-
-        cntfiles = 0
-        allfiles = 0
-
-        for material in groupfiles:
-            for page in groupfiles[material]:
-                allfiles = allfiles + 1
-
-        for material in groupfiles:
-            # print(material + ":" + str(groupfiles[material]))
-
-            for pagenr in groupfiles[material]:
-                inputarray = []
-                page = groupfiles[material][pagenr]
-                #arguments = ["python", "svg2gcode_merge.py"]
-                groupfiles[material][pagenr].sort(key=takeFirst)
-                for meta in page:
-                    curfile = {}
-                    if meta["material"] in skipmaterials or meta["procedure"] in skipprocedures:
-                        logging.info("I skip the material " + meta["material"] + " or procedure " + meta[
-                            "procedure"] + ". Skipped = " + str(skipprocedures))
-                        continue
-                    curfile["filename"]=meta["filename"]
-
-
-                    searchkey = meta["material"] + "_" + meta["procedure"]
-                    if not searchkey in layersettings:
-                        searchkey = "*_" + meta["procedure"]
-                        if not searchkey in layersettings:
-                            raise "Don't know how to proceed with material: " + str(
-                                meta["material"]) + " and/or procedure:" + str(meta["procedure"])
-
-                    cargs = layersettings[searchkey]
-                    curfile ["speed"]= cargs["speed"];
-                    if "repeat" in cargs:
-                        curfile["repeat"] = cargs["repeat"];
-                    curfile["strength"] = cargs["strength"];
-
-                    support = False
-                    if "support_gap" in cargs and cargs["support_gap"]:
-                        support = {"support_gap": float(cargs["support_gap"])}
-
-                        if not "support_strength" in cargs:
-                            support["support_strength"] = 0
-                        else:
-                            support["support_strength"] = cargs["support_strength"]
-
-                      #  arguments.append("support_strength:" + str(strength))
-                    curfile["support"]=support
-
-                    inputarray.append(curfile)
-
-                pageoutputdir = join(str(args.outputfolder), mainfilename)
-                pageoutputdir = join(pageoutputdir, material)
-                if not os.path.exists(pageoutputdir):
-                    os.makedirs(pageoutputdir)
-                outpuitfile = join(pageoutputdir, pagenr+"."+mainfilename+"."+material + ".gcode")
-
-                tempfolderin=join(tempfolder, "gcode")
-
-                if not os.path.exists(tempfolderin):
-                    os.makedirs(tempfolderin)
-
-                self.args = args
-                self.process(outpuitfile, inputarray,
-
-                                        padding=combine(args.padding),
-                                        codestyle=args.codestyle,
-                                        tmpdir=tempfolderin)
-
-
-
-
-
-
-                #    tempoutputdir = join(tmpdirgcode, title + "." + meta["material"] + "." + meta["page"])
-                #    if not os.path.exists(tempoutputdir):
-                #        os.makedirs(tempoutputdir)
-
-                #    outfilename = join(pageoutputdir, title + "." + meta["material"] + "." + meta["page"] + ".gcode")
-                #    arguments.append("--output")
-                #    arguments.append(outfilename)
-
-                #    arguments.append("--tempfolder")
-                #    arguments.append(tempoutputdir)
-
-                    # print(arguments)
-                #    logging.info(
-                #        "Process page " + str(cntfiles) + "of " + str(allfiles) + ". Merge with settings: " + str(
-                #            arguments))
-                #    cntfiles = cntfiles + 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    support["support_strength"]=filedesc["support_strength"]
+
+            curfile["support"] = support
+
+            inputarray.append(curfile)
+        self.args = args
+        return self.process(args.output, inputarray,
+                            s2g=combine(args.globals2g),
+                            padding=combine(args.padding), autoshiftY=args.autoshiftY, codestyle=args.codestyle,
+                            tmpdir=args.tempfolder)

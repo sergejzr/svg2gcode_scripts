@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+        width="175.62723mm"
+        height="106.22059mm"
+        viewBox="0 0 175.62722 106.22059"
+        version="1.1"
+        id="svg5"
+        inkscape:version="1.1.1 (eb90963e84, 2021-10-02)"
+        sodipodi:docname="ovals_Path_t.svg"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+    <sodipodi:namedview
+            id="namedview7"
+            pagecolor="#ffffff"
+            bordercolor="#666666"
+            borderopacity="1.0"
+            inkscape:pageshadow="2"
+            inkscape:pageopacity="0.0"
+            inkscape:pagecheckerboard="0"
+            inkscape:document-units="mm"
+            showgrid="false"
+            inkscape:zoom="1.2151235"
+            inkscape:cx="301.61543"
+            inkscape:cy="331.24205"
+            inkscape:window-width="1920"
+            inkscape:window-height="1176"
+            inkscape:window-x="1920"
+            inkscape:window-y="0"
+            inkscape:window-maximized="1"
+            inkscape:current-layer="layer7"
+            inkscape:snap-nodes="false"/>
+    <defs
+            id="defs2"/>
+    <g
+            inkscape:groupmode="layer"
+            id="layer2"
+            inkscape:label="Material">
+        <g
+                inkscape:groupmode="layer"
+                id="layer3"
+                inkscape:label="Page01">
+            <g
+                    inkscape:groupmode="layer"
+                    id="layer_{LAYERLABELPARAM}"
+                    inkscape:label="{LAYERLABELPARAM}">
+                <circle
+                        style="fill:#fffffe;stroke:#05162a;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none"
+                        id="circle_{LAYERLABELPARAM}"
+                        cx="{XPARAM}"
+                        cy="{YPARAM}"
+                        r="4"/>
+
+            </g>
+            <g
+                    inkscape:groupmode="layer"
+                    id="layer78"
+                    inkscape:label="NewTextLayer">
+                <g
+                        inkscape:groupmode="layer"
+                        id="layer7"
+                        inkscape:label="Text">
+                    <text
+                            xml:space="preserve"
+                            style="font-size:4.23333px;line-height:1.25;font-family:Calibri;-inkscape-font-specification:Calibri;letter-spacing:0px;word-spacing:0px;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none"
+                            x="{XPARAM}"
+                            y="{YPARAM}"
+                            id="text_{XPARAM}_{YPARAM}"
+                            inkscape:label="10"><tspan
+           sodipodi:role="line"
+           id="tspan__{XPARAM}_{YPARAM}"
+           style="stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none">{FPARAM}</tspan></text>
+                </g>
+            </g>
+            <g
+                    inkscape:groupmode="layer"
+                    id="layer9"
+                    inkscape:label="Bounds">
+                <path
+                        style="display:inline;fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 0.762824,6.978 V 0.132257 H 6.34756"
+                        id="path107137"/>
+                <path
+                        style="display:inline;fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 175.49444,6.97803 V 0.132291 h -5.58474"
+                        id="path3849"/>
+                <path
+                        style="display:inline;fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                        d="m 169.2792,105.4578 h 6.84574 v -5.584742"
+                        id="path3851"/>
+                <path
+                        style="display:inline;fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                        d="m 0.7622915,99.242559 v 6.845741 h 5.58474"
+                        id="path3853"/>
+            </g>
+        </g>
+    </g>
+</svg>

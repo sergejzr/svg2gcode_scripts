@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="" />
+    <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gcodelib/_old.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_old.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ovaltest.ini" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/oval.svgtemplate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testmaker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" beforeDir="false" afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material.ini" beforeDir="false" afterPath="$PROJECT_DIR$/material.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/material_de.ini" beforeDir="false" afterPath="$PROJECT_DIR$/material_de.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toy.svg" beforeDir="false" afterPath="$PROJECT_DIR$/toy.svg" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,16 +50,17 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/gcodelib" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/gcodelib" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/inksvglib" />
-      <recent name="$PROJECT_DIR$/gcodelib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/jupyter" />
     </key>
   </component>
@@ -64,7 +78,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder Toy -v True" />
+      <option name="PARAMETERS" value="--file toy.svg --configfile=material.ini --tempfolder tmp --outputfolder alltest -v True -p x:5 y:5" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -135,27 +149,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="svglayersplit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="svg2gcode_scripts" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/svglayersplit.py" />
-      <option name="PARAMETERS" value="-f $PROJECT_DIR$/toyAT.svg" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="svgsplit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -177,20 +170,41 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="testmaker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="svg2gcode_scripts" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testmaker.py" />
+      <option name="PARAMETERS" value="-c ovaltest.ini -o ovaltest" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python.svglayersplit" />
       <item itemvalue="Python.main_new" />
       <item itemvalue="Python.support" />
       <item itemvalue="Python.svgsplit" />
+      <item itemvalue="Python.testmaker" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.testmaker" />
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.support" />
-        <item itemvalue="Python.svgsplit" />
       </list>
     </recent_temporary>
   </component>
@@ -222,10 +236,45 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
-          <line>294</line>
-          <option name="timeStamp" value="105" />
+          <line>519</line>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>558</line>
+          <option name="timeStamp" value="183" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>540</line>
+          <option name="timeStamp" value="186" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>547</line>
+          <option name="timeStamp" value="187" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>472</line>
+          <option name="timeStamp" value="188" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>680</line>
+          <option name="timeStamp" value="190" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py</url>
+          <line>675</line>
+          <option name="timeStamp" value="191" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="config[section]" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
