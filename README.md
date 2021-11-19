@@ -1,3 +1,4 @@
+(Update: generation of a test-file added!)
 # svg2gcode  (CNC Engrave & Cut in one SVG file)
 Scripts for converting / batchprocessing of multilayerd inkscape SVG files into GCODE for variety of CNC progamms like laserGRBL
 
@@ -71,6 +72,18 @@ The software is highly experimental, I had to learn many things by doing and I h
 The software may have issues. Please check the generated output (even better would be to simulate ) before cutting
 Example simulator: https://ncviewer.com/
 
+
+## Generation of a Test-File
+Often you want to test, how your laser would cut at different settings. Typically ypu want to cat as fas as possible with slightly reduced laser (to keep it living longer) and you want to achive particular cut-depth. To do this, the best way is to generate a test file that will cut at different settings on a test sheet that you can use later to read the parameters you need.
+Something like:
+<img src="ovaltest/test_oval.svg"/>
+Where each block corresponds toa  particular S (laser stregth) and each circle is cut at different F (head moving speed)
+This can be done now. Just define the S sections and corresponding F sequence in "ovaltest.ini" amnd execute:
+`
+python testmaker.py -c ovaltest.ini -o ovaltest
+`
+The resulting files will be written to "ovaltest/input_oval/Material/Page01.input_oval.Material.gcode"
+Automatically generated SVG ("input_oval.svg") and cut-setting (input_oval_settings.ini) can be viewed as well in the folder "ovaltest" 
 
 ### CREDITS:
 - <a href="https://inkscape.org/">inkscape</a> for the program to easily design of parts in SVG
