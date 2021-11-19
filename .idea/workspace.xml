@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5daf15e7-d178-4df5-a70c-8ae31e125c94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gcodelib/_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ovaltest.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/oval.svgtemplate" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testmaker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" beforeDir="false" afterPath="$PROJECT_DIR$/gcodelib/Svg2GcodeMerger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/material.ini" beforeDir="false" afterPath="$PROJECT_DIR$/material.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/material_de.ini" beforeDir="false" afterPath="$PROJECT_DIR$/material_de.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toy.svg" beforeDir="false" afterPath="$PROJECT_DIR$/toy.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ovaltest/test_oval.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ovaltest/test_oval.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testmaker.py" beforeDir="false" afterPath="$PROJECT_DIR$/testmaker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +56,7 @@
       <recent name="$PROJECT_DIR$/jupyter" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.testmaker">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="svg2gcode_scripts" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -200,8 +192,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.testmaker" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.main_new" />
         <item itemvalue="Python.support" />

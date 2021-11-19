@@ -103,17 +103,17 @@ if __name__ == '__main__':
         os.makedirs(args.outputfolder)
 
     svgfile = os.path.join(args.outputfolder,
-                           "test_oval.svg")
+                           "input_oval.svg")
 
     with open(svgfile, 'w') as fp:
         fp.write(res)
         fp.close()
 
     inifile = os.path.join(args.outputfolder,
-                           "test_oval.ini")
+                           "input_oval_settings.ini")
     with open(inifile, 'w') as fp:
         fp.write(iniblock)
         fp.close()
 
 
-    qx(["python", "main.py", "--file", svgfile, "--configfile", inifile,"-p","x:5","y:5", "--tempfolder", "tmp", "--outputfolder","testtemplate", "-v", "True"])
+    qx(["python", "main.py", "--file", svgfile, "--configfile", inifile,"-p","x:5","y:5", "--tempfolder", "tmp", "--outputfolder",str(args.outputfolder), "-v", "True"])
